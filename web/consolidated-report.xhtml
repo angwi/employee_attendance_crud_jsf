@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/template.xhtml">
+
+            <ui:define name="title">
+                #{msg.consolidatedreport}
+            </ui:define>
+
+            <ui:define name="content">
+                 <h:form >
+                     <p:remoteCommand action="#{employeeController.dofindAllArrivalsAndDepartures()}" autoRun="true"/>
+                <p:card>
+                    <p:dataTable value="#{employeeController.reportItems}" var="rpt" size="small" id="attendance-record">
+                        <f:facet name="header">
+                            <div class="align-center">
+                                <h:outputText value="#{msg.consolidatedreport}"/>
+                            </div>
+                        </f:facet>
+                        <p:autoUpdate />
+                        <p:column headerText="#{msg.name}">
+                            <h:outputText value="#{rpt.employee.firstName} #{rpt.employee.lastName}"  />
+                        </p:column>
+                        <p:column headerText="#{msg.date}">
+                            <h:outputText value="#{rpt.time.date}" />
+                        </p:column>
+                        <p:column headerText="#{msg.arrivaltime}">
+                            <h:outputText value="#{rpt.time.arrivalTime}" />
+                        </p:column>
+                        <p:column headerText="#{msg.departuretime}" >
+                            <h:outputText value="#{rpt.time.departureTime}" />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton value="#{msg.exporttoexcel}" icon="pi pi-file-excel" styleClass="ui-button-raised ui-button-warning">
+                                <p:dataExporter type="xls" target="attendance-record" fileName="attendance-record"/>
+                            </p:commandButton>
+                            <p:spacer width="15"/>
+                            <p:commandButton value="#{msg.exporttopdf}" icon="pi pi-file-pdf" styleClass="ui-button-raised ui-button-flat">
+                                <p:dataExporter type="pdf" target="attendance-record" fileName="attendance-record"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+                </p:card>
+                   
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

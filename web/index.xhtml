@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/template.xhtml">
+
+            <ui:define name="title">
+                #{msg.home}
+            </ui:define>
+
+            <ui:define name="content">
+                <p:growl showDetail="true">
+                    <p:autoUpdate/>
+                </p:growl>
+                <h:form id="viewFrm">
+                    <p:card>
+                        <p:toolbar style="padding:5px">
+                        <p:toolbarGroup>
+                            <p:commandButton value="#{msg.addnewemployee}"
+                                             icon="pi pi-plus"
+                                             immediate="true"
+                                             styleClass="ui-button-raised"
+                                             oncomplete="PF('empDlg').show()"
+                                             style="margin-right: .5rem">
+                            </p:commandButton>
+
+                        </p:toolbarGroup>
+
+                    </p:toolbar>
+
+                    <p:dataTable style="margin-top: 5px;"
+                                 id="dt-employees"
+                                 size="small"
+                                 value="#{employeeController.employees}"
+                                 var="emp" paginator="true"
+                                 paginatorPosition="bottom"
+                                 paginatorAlwaysVisible="true" 
+                                 rows="5" styleClass="employeeTable">
+                        <f:facet name="header">
+                            <div class="align-center">
+                                <h:outputText value="#{msg.employees}" style="font-size: 20px"/>
+                            </div>
+                        </f:facet>
+                        <p:column headerText="#{msg.name}">
+                            <h:outputText value="#{emp.firstName} #{emp.lastName}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.email}">
+                            <h:outputText value="#{emp.email}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.phone}">
+                            <h:outputText value = "#{emp.phone}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.gender}">
+                            <h:outputText value="#{emp.gender}"/>
+                        </p:column>
+                        <p:column headerText="#{msg.action}">
+                            <p:commandButton title="#{msg.editthisrow}" 
+                                             icon="pi pi-pencil" 
+                                             oncomplete="PF('editEmployeepDlg').show()"
+                                             process="@this"
+                                             styleClass="rounded-button ui-button-success ui-button-flat">
+                                <f:setPropertyActionListener value="#{emp}" target="#{employeeController.selectedEmployee}"/>
+                            </p:commandButton>
+                                <p:spacer width="10"/>
+                                <p:commandButton title="#{msg.deletethisrow}" 
+                                             oncomplete="PF('deleteEmployeeDialog').show()"                                                 
+                                             icon="pi pi-trash"
+                                             process="@this"
+                                             styleClass="rounded-button ui-button-danger ui-button-flat">
+                                <f:setPropertyActionListener value="#{emp}" target="#{employeeController.selectedEmployee}"/>
+                            </p:commandButton>
+
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton value="#{msg.exporttoexcel}" immediate="true" icon="pi pi-file-excel" styleClass="ui-button-raised ui-button-warning">
+                                <p:dataExporter type="xls" target="dt-employees" fileName="attendance-record"/>
+                            </p:commandButton>
+                            <p:spacer width="15"/>
+                            <p:commandButton value="#{msg.exporttopdf}" icon="pi pi-file-pdf" styleClass="ui-button-raised ui-button-flat">
+                                <p:dataExporter type="pdf" target="dt-employees" fileName="attendance-record"/>
+                            </p:commandButton>
+                        </f:facet>
+                    </p:dataTable>
+
+
+                    <p:confirmDialog widgetVar="deleteEmployeeDialog" showEffect="fade" width="300"
+                                     message="#{msg.deletethisemployee}" header="#{msg.confirm}" severity="warn">
+                        <p:commandButton value="Yes" icon="pi pi-check"
+                                         action="#{employeeController.doDeleteEmployee()}"
+                                         process="@this" 
+                                         oncomplete="PF('deleteEmployeeDialog').hide()"
+                                         update="@(.employeeTable)"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                         onclick="PF('deleteEmployeeDialog').hide()"/>
+                    </p:confirmDialog>
+          
+                    
+                    <p:dialog header="Employee Details" showEffect="fade" modal="true"
+                              widgetVar="empDlg" responsive="true" id="emp-dlg" >
+                        <p:outputPanel id="manage-employee-content" class="ui-fluid">
+                            <div class="p-field">
+                                <p:outputLabel for="first-name">First Name</p:outputLabel>
+                                <p:inputText id="first-name" value="#{employeeController.employee.firstName}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="last-name">Last Name</p:outputLabel>
+                                <p:inputText id="last-name" value="#{employeeController.employee.lastName}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="email">Email</p:outputLabel>
+                                <p:inputText id="email" value="#{employeeController.employee.email}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="phone">Phone</p:outputLabel>
+                                <p:inputText id="phone" value="#{employeeController.employee.phone}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="gender">Gender</p:outputLabel>
+                                <p:selectOneRadio id="gender" value="#{employeeController.employee.gender}"
+                                                  layout="responsive" columns="2" required="true">
+                                    <f:selectItem itemLabel="#{msg.female}" itemValue="Female"/>
+                                    <f:selectItem itemLabel="#{msg.male}" itemValue="Male"/>
+                                </p:selectOneRadio>
+                            </div>
+                        </p:outputPanel>
+                        <f:facet name="footer">
+                            <p:commandButton value="Save Employee"
+                                             icon="pi pi-check"
+                                             action="#{employeeController.doCreateEmployee()}"
+                                             update="@(.employeeTable)" 
+                                             process="manage-employee-content @this"
+                                             oncomplete="PF('empDlg').hide()"/>
+                            <p:commandButton value="#{msg.cancel}" icon="pi pi-times" onclick="PF('empDlg').hide()"
+                                             class="ui-button-secondary" type="button"/>
+                        </f:facet>
+
+                    </p:dialog>
+
+
+
+
+
+
+
+                    
+                    </p:card>
+                </h:form>
+
+                <h:form>
+                    <p:dialog header="Employee for Edit" showEffect="fade" modal="true"
+                              widgetVar="editEmployeepDlg" responsive="true" id="edit-emp-dlg" >
+                        <p:autoUpdate/>
+                        <p:outputPanel id="edit-employee-content" class="ui-fluid">
+
+                            <div class="p-field">
+                                <p:outputLabel for="edit-first-name">First Name</p:outputLabel>
+                                <p:inputText id="edit-first-name" value="#{employeeController.selectedEmployee.firstName}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="edit-last-name">Last Name</p:outputLabel>
+                                <p:inputText id="edit-last-name" value="#{employeeController.selectedEmployee.lastName}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="edit-email">Email</p:outputLabel>
+                                <p:inputText id="edit-email" value="#{employeeController.selectedEmployee.email}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="edit-phone">Phone</p:outputLabel>
+                                <p:inputText id="edit-phone" value="#{employeeController.selectedEmployee.phone}" required="true"/>
+                            </div>
+                            <div class="p-field">
+                                <p:outputLabel for="edit-gender">Gender</p:outputLabel>
+                                <p:selectOneRadio id="edit-gender" value="#{employeeController.selectedEmployee.gender}"
+                                                  layout="responsive" columns="2" required="true">
+                                    <f:selectItem itemLabel="Female" itemValue="Female"/>
+                                    <f:selectItem itemLabel="Male" itemValue="Male"/>
+                                </p:selectOneRadio>
+                            </div>
+                        </p:outputPanel>
+                        <f:facet name="footer">
+                            <p:commandButton ajax="true" value="Save Changes" icon="pi pi-check"
+                                             action="#{employeeController.doEditEmployee()}"
+                                             update="@(.employeeTable)"
+                                             process="edit-employee-content @this"/>
+                            <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('editEmployeepDlg').hide()"
+                                             class="ui-button-secondary"/>
+                        </f:facet>
+
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

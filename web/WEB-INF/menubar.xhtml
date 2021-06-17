@@ -1,0 +1,22 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    <h:form style="margin-bottom: 20px;">
+        
+        <p:toolbar style="border:none;border-bottom: 2px orange solid; padding: 8px; ">
+            <p:toolbarGroup>
+                <p:button value="#{msg.employees}" icon="pi pi-fw pi-home" styleClass="ui-button-flat" outcome="index"/>
+                <p:button value="#{msg.timerecord}" icon="pi pi-fw pi-calendar" styleClass="ui-button-flat" outcome="time-record"/>
+                <p:button value="#{msg.arrivalsreport}" icon="pi pi-fw pi-pencil" styleClass="ui-button-flat" outcome="arrivals-report"/>
+                <p:button value="#{msg.departurereports}" icon="pi pi-fw pi-file" styleClass="ui-button-flat" outcome="departures-report"/>
+                <p:button value="#{msg.consolidatedreport}" icon="pi pi-fw pi-list" styleClass="ui-button-flat" outcome="consolidated-report"/>
+</p:toolbarGroup>
+<p:toolbarGroup>
+    <p:commandLink value="#{msg.english}" ajax="false" action="#{languageController.changeToEnglish()}"/><p:spacer width="10"/>
+    <p:commandLink value="#{msg.french}" ajax="false" action="#{languageController.changeToFrench()}"/>
+</p:toolbarGroup>
+</p:toolbar>
+    </h:form>
+</ui:composition>

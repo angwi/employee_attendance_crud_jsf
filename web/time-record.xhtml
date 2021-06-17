@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <body>
+        <ui:composition template="./WEB-INF/template.xhtml">
+            <ui:define name="title">
+                #{msg.timerecord}
+            </ui:define>
+            <ui:define name="content">
+                <p:tabView style="width:600px">
+                    <p:tab title="#{msg.arrival}">
+                        <h:form id="arrivalForm">
+                            <h2>#{msg.arrivalinfo}</h2>
+                            <p:outputPanel id="edit-employee-content" class="ui-fluid">
+                                <div class="p-field">
+                                    <p:outputLabel for="emp" value="#{msg.selectemployee}"/>
+                                    <p:selectOneMenu id="emp" filter="true" filterMatchMode="contains" value="#{employeeController.arrivalDepartureTime.employeeId}">
+                                        <f:selectItems 
+                                            value="#{employeeController.employees}" 
+                                            var="emp" itemLabel="#{emp.firstName} #{emp.lastName}"
+                                            itemValue="#{emp.employeeId}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="date" value="#{msg.date}"/>
+                                    <p:datePicker 
+                                        id="date"
+                                        value="#{employeeController.arrivalDepartureTime.date}"
+                                        pattern="dd-MM-yyyy"
+                                        showButtonBar="true"
+                                        showIcon="true"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="time" value="#{msg.time}"/>
+                                    <p:datePicker id="time"
+                                                  value="#{employeeController.arrivalDepartureTime.arrivalTime}"
+                                                  timeOnly="true"
+                                                  showButtonBar="false" 
+                                                  showIcon="true"
+                                                  pattern="HH:mm"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:commandButton value="#{msg.submit}" action="#{employeeController.recordArrivalTime()}"/>
+                                </div>
+                            </p:outputPanel>
+                        </h:form>
+                    </p:tab>
+                    <p:tab title="#{msg.departure}">
+                        <h:form id="departureForm">
+
+                            <h2>Departure Info</h2>
+                            <p:outputPanel id="edit-employee-content" class="ui-fluid">
+                                <div class="p-field">
+                                    <p:outputLabel for="emp" value="#{msg.selectemployee}"/>
+                                    <p:selectOneMenu id="emp" filter="true" filterMatchMode="contains" value="#{employeeController.arrivalDepartureTime.employeeId}">
+                                        <f:selectItems 
+                                            value="#{employeeController.employees}" 
+                                            var="emp" itemLabel="#{emp.firstName} #{emp.lastName}"
+                                            itemValue="#{emp.employeeId}"/>
+                                    </p:selectOneMenu>
+                                </div>
+
+                                <div class="p-field">
+                                    <p:outputLabel for="date" value="#{msg.date}"/>
+                                    <p:datePicker 
+                                        id="date"
+                                        value="#{employeeController.arrivalDepartureTime.date}"
+                                        pattern="dd-MM-yyyy"
+                                        showButtonBar="true"
+                                        showIcon="true"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:outputLabel for="time" value="#{msg.time}"/>
+                                    <p:datePicker id="time"
+                                                  value="#{employeeController.arrivalDepartureTime.departureTime}"
+                                                  timeOnly="true"
+                                                  showButtonBar="false" 
+                                                  showIcon="true"
+                                                  pattern="HH:mm"/>
+                                </div>
+                                <div class="p-field">
+                                    <p:commandButton value="#{msg.submit}" action="#{employeeController.recordDepartureTime()}"/>
+                                </div>
+                            </p:outputPanel>                    
+                        </h:form>
+                    </p:tab>
+                </p:tabView>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
